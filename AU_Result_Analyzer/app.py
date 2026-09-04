@@ -1147,260 +1147,343 @@ def create_section_pdf(
 
     return buffer.getvalue()
 
-
 # ============================================================
-# CUSTOM CSS
+# RESPONSIVE UI - LAPTOP + MOBILE
 # ============================================================
 
-st.markdown(
-    """
+st.markdown("""
 <style>
 
-/* ==========================================================
+/* ============================================================
    GLOBAL
-========================================================== */
+============================================================ */
+
+html, body, [data-testid="stAppViewContainer"] {
+    overflow-x: hidden !important;
+}
 
 [data-testid="stAppViewContainer"] {
-    background:
-        linear-gradient(
-            135deg,
-            #f7f9fc 0%,
-            #edf5f8 100%
-        );
+    background: linear-gradient(
+        135deg,
+        #f4f8fc 0%,
+        #eef6f8 100%
+    ) !important;
 }
 
-[data-testid="stMainBlockContainer"] {
-    padding-top: 1.2rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    max-width: 100%;
+/* Main content */
+[data-testid="stMainBlockContainer"],
+.block-container {
+    color: #172033 !important;
+    max-width: 100% !important;
 }
 
-/* ==========================================================
+/* Force normal dark text in main area */
+[data-testid="stMainBlockContainer"] p,
+[data-testid="stMainBlockContainer"] span,
+[data-testid="stMainBlockContainer"] label,
+[data-testid="stMainBlockContainer"] div {
+    color: inherit;
+}
+
+/* Headings */
+[data-testid="stMainBlockContainer"] h1,
+[data-testid="stMainBlockContainer"] h2,
+[data-testid="stMainBlockContainer"] h3,
+[data-testid="stMainBlockContainer"] h4 {
+    color: #102a43 !important;
+    font-weight: 750 !important;
+}
+
+/* ============================================================
    SIDEBAR
-========================================================== */
+============================================================ */
 
 [data-testid="stSidebar"] {
-    background:
-        linear-gradient(
-            180deg,
-            #102f4a 0%,
-            #124e63 100%
-        );
+    background: linear-gradient(
+        180deg,
+        #102f4d 0%,
+        #12556a 100%
+    ) !important;
 }
 
 [data-testid="stSidebar"] * {
-    color: white;
+    color: #ffffff !important;
 }
 
-/* ==========================================================
-   HEADINGS
-========================================================== */
-
-h1 {
-    font-size: 2.2rem !important;
-    font-weight: 800 !important;
-}
-
-h2 {
-    font-size: 1.55rem !important;
-}
-
-h3 {
-    font-size: 1.2rem !important;
-}
-
-/* ==========================================================
-   FILE UPLOADER
-========================================================== */
-
-[data-testid="stFileUploader"] {
-    background: white !important;
+/* Sidebar file uploader */
+[data-testid="stSidebar"] [data-testid="stFileUploader"] {
+    background: #ffffff !important;
     border-radius: 14px !important;
     padding: 8px !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stFileUploader"] * {
+    color: #172033 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stFileUploaderDropzone"] {
+    background: #ffffff !important;
+    border: 2px dashed #2b8ac6 !important;
+    border-radius: 12px !important;
+}
+
+/* ============================================================
+   FILE UPLOADER - MAIN
+============================================================ */
+
+[data-testid="stFileUploader"] {
+    width: 100% !important;
 }
 
 [data-testid="stFileUploaderDropzone"] {
     background: #ffffff !important;
     border: 2px dashed #2584c6 !important;
     border-radius: 12px !important;
-    min-height: 110px !important;
 }
 
-[data-testid="stFileUploaderDropzone"] * {
-    color: #172033 !important;
-}
-
-/* Browse button */
-
-[data-testid="stFileUploaderDropzone"] button {
-    color: #172033 !important;
-    background: #f4f7fb !important;
-    border: 1px solid #9db4ca !important;
-}
-
-/* ==========================================================
-   METRICS
-========================================================== */
+/* ============================================================
+   METRIC CARDS
+============================================================ */
 
 [data-testid="stMetric"] {
-    background: rgba(255,255,255,0.92);
-    border-radius: 14px;
-    padding: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    border: 1px solid rgba(20,60,90,0.08);
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    box-shadow: 0 5px 18px rgba(15, 40, 60, 0.08) !important;
+    min-height: 100px !important;
 }
 
+/* Metric label */
 [data-testid="stMetricLabel"] {
+    color: #526274 !important;
     font-weight: 600 !important;
 }
 
-/* ==========================================================
-   DATAFRAMES
-========================================================== */
+/* Metric number */
+[data-testid="stMetricValue"] {
+    color: #12355b !important;
+    font-weight: 800 !important;
+}
+
+/* Metric delta */
+[data-testid="stMetricDelta"] {
+    color: #526274 !important;
+}
+
+/* ============================================================
+   DATAFRAMES / TABLES
+============================================================ */
 
 [data-testid="stDataFrame"] {
+    width: 100% !important;
     border-radius: 12px !important;
     overflow: hidden !important;
 }
 
-/* ==========================================================
+/* ============================================================
    BUTTONS
-========================================================== */
+============================================================ */
 
 .stButton > button,
 .stDownloadButton > button {
     width: 100% !important;
     min-height: 44px !important;
     border-radius: 10px !important;
-    font-weight: 650 !important;
+    font-weight: 700 !important;
 }
 
-/* ==========================================================
-   INFO / SUCCESS BOXES
-========================================================== */
+/* ============================================================
+   TABS
+============================================================ */
+
+[data-baseweb="tab-list"] {
+    width: 100% !important;
+    gap: 4px !important;
+}
+
+[data-baseweb="tab"] {
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+}
+
+/* ============================================================
+   INFO / SUCCESS / WARNING BOXES
+============================================================ */
 
 [data-testid="stAlert"] {
     border-radius: 12px !important;
 }
 
-/* ==========================================================
-   MOBILE
-========================================================== */
+/* ============================================================
+   MOBILE - <= 768px
+============================================================ */
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
 
-    [data-testid="stMainBlockContainer"] {
-        padding-top: 0.8rem !important;
-        padding-left: 0.65rem !important;
-        padding-right: 0.65rem !important;
+    /* Main page */
+    [data-testid="stMainBlockContainer"],
+    .block-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        padding-top: 12px !important;
+        padding-bottom: 40px !important;
+    }
+
+    /* Headings */
+    [data-testid="stMainBlockContainer"] h1 {
+        font-size: 1.55rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 8px !important;
+    }
+
+    [data-testid="stMainBlockContainer"] h2 {
+        font-size: 1.3rem !important;
+    }
+
+    [data-testid="stMainBlockContainer"] h3 {
+        font-size: 1.08rem !important;
+    }
+
+    /* --------------------------------------------------------
+       ALL COLUMNS BECOME FULL WIDTH
+    -------------------------------------------------------- */
+
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+    }
+
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    /* --------------------------------------------------------
+       METRICS
+    -------------------------------------------------------- */
+
+    [data-testid="stMetric"] {
+        width: 100% !important;
+        min-height: 85px !important;
+        padding: 12px !important;
+        margin-bottom: 4px !important;
+    }
+
+    [data-testid="stMetricLabel"] {
+        font-size: 0.78rem !important;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.45rem !important;
+    }
+
+    /* --------------------------------------------------------
+       TABS
+    -------------------------------------------------------- */
+
+    [data-baseweb="tab-list"] {
+        display: flex !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+    }
+
+    [data-baseweb="tab-list"]::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    [data-baseweb="tab"] {
+        flex: 1 0 auto !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* --------------------------------------------------------
+       TABLES
+    -------------------------------------------------------- */
+
+    [data-testid="stDataFrame"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+    }
+
+    /* --------------------------------------------------------
+       DOWNLOAD BUTTON
+    -------------------------------------------------------- */
+
+    .stDownloadButton {
         width: 100% !important;
     }
 
+    .stDownloadButton > button {
+        width: 100% !important;
+    }
+
+    /* --------------------------------------------------------
+       SIDEBAR
+    -------------------------------------------------------- */
+
+    [data-testid="stSidebar"] {
+        width: 85vw !important;
+        max-width: 330px !important;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES - <= 480px
+============================================================ */
+
+@media screen and (max-width: 480px) {
+
+    [data-testid="stMainBlockContainer"],
     .block-container {
-        padding-top: 0.8rem !important;
-        padding-left: 0.65rem !important;
-        padding-right: 0.65rem !important;
-        max-width: 100% !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
     }
 
-    h1 {
-        font-size: 1.55rem !important;
-        line-height: 1.2 !important;
+    [data-testid="stMainBlockContainer"] h1 {
+        font-size: 1.3rem !important;
     }
 
-    h2 {
-        font-size: 1.25rem !important;
+    [data-testid="stMainBlockContainer"] h2 {
+        font-size: 1.15rem !important;
     }
 
-    h3 {
-        font-size: 1.05rem !important;
+    [data-testid="stMainBlockContainer"] h3 {
+        font-size: 1rem !important;
     }
 
     [data-testid="stMetric"] {
         padding: 10px !important;
-        margin-bottom: 8px !important;
+        border-radius: 12px !important;
     }
 
     [data-testid="stMetricValue"] {
-        font-size: 1.35rem !important;
+        font-size: 1.25rem !important;
     }
 
     [data-testid="stMetricLabel"] {
-        font-size: 0.76rem !important;
+        font-size: 0.7rem !important;
     }
 
-    [data-testid="stDataFrame"] {
-        width: 100% !important;
-        overflow-x: auto !important;
-    }
-
-    [data-testid="stFileUploader"] {
-        width: 100% !important;
-    }
-
-    [data-testid="stFileUploaderDropzone"] {
-        min-height: 105px !important;
-    }
-
-    .stDownloadButton > button {
-        min-height: 48px !important;
-        font-size: 0.95rem !important;
-    }
-
-    /* Tabs fit better on phone */
-
-    button[data-baseweb="tab"] {
-        font-size: 0.82rem !important;
-        padding-left: 7px !important;
-        padding-right: 7px !important;
-    }
-}
-
-/* ==========================================================
-   VERY SMALL PHONE
-========================================================== */
-
-@media (max-width: 480px) {
-
-    [data-testid="stMainBlockContainer"] {
-        padding-left: 0.45rem !important;
-        padding-right: 0.45rem !important;
-    }
-
-    .block-container {
-        padding-left: 0.45rem !important;
-        padding-right: 0.45rem !important;
-    }
-
-    h1 {
-        font-size: 1.3rem !important;
-    }
-
-    h2 {
-        font-size: 1.1rem !important;
-    }
-
-    [data-testid="stMetricValue"] {
-        font-size: 1.15rem !important;
-    }
-
-    [data-testid="stMetricLabel"] {
-        font-size: 0.68rem !important;
-    }
-
-    button[data-baseweb="tab"] {
-        font-size: 0.72rem !important;
-        padding-left: 4px !important;
-        padding-right: 4px !important;
+    [data-baseweb="tab"] {
+        font-size: 0.78rem !important;
+        padding-left: 9px !important;
+        padding-right: 9px !important;
     }
 }
 
 </style>
-""",
-    unsafe_allow_html=True,
-)
-
+""", unsafe_allow_html=True)
 
 # ============================================================
 # SESSION STATE
