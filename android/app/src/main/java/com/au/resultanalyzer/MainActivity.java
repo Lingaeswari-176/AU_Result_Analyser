@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -16,7 +17,7 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
 
-    private static final String URL = "https://auresultanalyser-b5acl3evfarngeikzan3nu.streamlit.app/";
+    private static final String URL = "https://streamlit.app";
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
     
     private WebView webView;
@@ -40,8 +41,6 @@ public class MainActivity extends Activity {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        
-        // Crucial for Streamlit file uploads
         settings.setAllowFileAccess(true);
 
         final ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
@@ -51,16 +50,13 @@ public class MainActivity extends Activity {
         progressBar.setMax(100);
 
         webView.setWebViewClient(new WebViewClient());
-        
-        // Updated WebChromeClient to handle Streamlit's web upload clicks
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 progressBar.setProgress(newProgress);
-                progressBar.setVisibility(newProgress == 100 ? android.view.View.GONE : android.view.View.VISIBLE);
+                progressBar.setVisibility(newProgress == 100 ? View.GONE : View.VISIBLE);
             }
 
-            // This intercepts the web page upload request and opens the Android file selector
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, 
                                              WebChromeClient.FileChooserParams fileChooserParams) {
@@ -89,7 +85,6 @@ public class MainActivity extends Activity {
         setContentView(root);
     }
 
-    // This catches the PDF file you picked from your phone and sends it back to your Streamlit site
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
