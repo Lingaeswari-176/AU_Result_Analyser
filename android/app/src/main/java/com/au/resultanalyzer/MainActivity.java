@@ -41,7 +41,12 @@ public class MainActivity extends Activity {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        
+        // CRUCIAL UNBLOCK FOR STREAMLIT IFRAMES:
         settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
 
         final ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         FrameLayout.LayoutParams progressParams = new FrameLayout.LayoutParams(
@@ -49,7 +54,15 @@ public class MainActivity extends Activity {
         progressBar.setLayoutParams(progressParams);
         progressBar.setMax(100);
 
-        webView.setWebViewClient(new WebViewClient());
+        // Forces all links and iframes to stay inside this app frame
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -57,6 +70,7 @@ public class MainActivity extends Activity {
                 progressBar.setVisibility(newProgress == 100 ? View.GONE : View.VISIBLE);
             }
 
+            // Catches the upload trigger from the Streamlit web iframe
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, 
                                              WebChromeClient.FileChooserParams fileChooserParams) {
