@@ -26,8 +26,8 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android
-          # Locks the wrapper to 8.2 to match your buildscript version exactly
-          gradle wrapper --gradle-version 8.2
+          # Fixed: Removed the breaking global wrapper command line.
+          # We run the build directly using your local repository files.
           chmod +x gradlew
           ./gradlew clean assembleDebug --stacktrace
 
