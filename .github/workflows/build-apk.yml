@@ -1,4 +1,4 @@
-name: Build and Sign APK
+name: Build APK
 
 on:
   workflow_dispatch:
@@ -26,23 +26,20 @@ jobs:
       - name: Build release APK
         run: |
           cd android
+          # Automatically generates the missing gradlew wrapper script
+          gradle wrapper --gradle-version 8.4
+          # Grants permission and runs the build compilation
           chmod +x gradlew
           ./gradlew assembleRelease --stacktrace
 
-      # NEW STEP: Sign the APK automatically
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: List build outputs (debug)
+        run: |
+          find android/app/build/outputs -type f -exec ls -la {} \;
 
-      - name: Upload Signed APK artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AU-Result-Analyser-Signed-APK
-          path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+          name: AU-Result-Analyser-APK
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
+          
