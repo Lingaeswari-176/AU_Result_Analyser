@@ -26,10 +26,8 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android
-          # Generates the missing gradle files automatically
           gradle wrapper --gradle-version 8.4
           chmod +x gradlew
-          # Compiles a Debug build so it packs your code and installs on your phone
           ./gradlew assembleDebug --stacktrace
 
       - name: Upload Debug APK Artifact
