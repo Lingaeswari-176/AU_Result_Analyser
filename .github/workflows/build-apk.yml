@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - 'android/**'
 
 jobs:
   build:
@@ -20,16 +18,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Gradle
+      - name: Force Global Gradle Installation
         uses: gradle/actions/setup-gradle@v4
+        with:
+          # Forces GitHub to use an official engine, bypassing missing gradlew scripts
+          gradle-version: '8.2'
 
-      - name: Build Debug APK
+      - name: Compile Mobile Package
         run: |
           cd android
-          # Fixed: Removed the breaking global wrapper command line.
-          # We run the build directly using your local repository files.
-          chmod +x gradlew
-          ./gradlew clean assembleDebug --stacktrace
+          # Runs compilation using the secure global engine configuration
+          gradle clean assembleDebug --stacktrace
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
