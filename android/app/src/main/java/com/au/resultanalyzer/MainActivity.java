@@ -1,3 +1,4 @@
+            
 package com.au.resultanalyzer;
 
 import android.app.Activity;
@@ -14,8 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.FrameLayout;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String URL = "https://streamlit.app";
     private static final int FILE_CHOOSER_RESULT_CODE = 1;
