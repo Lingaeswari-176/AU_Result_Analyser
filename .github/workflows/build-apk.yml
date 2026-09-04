@@ -31,10 +31,15 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --stacktrace
+
+      - name: List build outputs (debug)
+        run: |
+          find android/app/build/outputs -type f -exec ls -la {} \;
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: AU-Result-Analyser-APK
-          path: android/app/build/outputs/apk/release/*.apk
+          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
