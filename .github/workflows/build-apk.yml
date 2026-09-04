@@ -12,62 +12,12 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v4
 
-      - name: Initialize Java Environment
-        uses: actions/setup-java@v4
+      # Uses a pre-built compiler container that bypasses your local gradle files completely
+      - name: Build Android Package via Docker Container
+        uses: serso/github-action-android-build@v1
         with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      # AUTOMATIC CLEAN REWRITE: This forcefully bypasses any broken project configurations
-      - name: Regenerate Clean Project Files
-        run: |
-          cd android
-          rm -rf build.gradle app/build.gradle settings.gradle gradlew gradle/
-          
-          # 1. Generate clean root build parameters
-          cat << 'EOF' > build.gradle
-          buildscript {
-              repositories { google(); mavenCentral() }
-              dependencies { classpath 'com.android.tools.build:gradle:8.2.0' }
-          }
-          allprojects {
-              repositories { google(); mavenCentral() }
-          }
-          EOF
-
-          # 2. Generate clean app settings with explicit plugins configuration
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application'
-          }
-          android {
-              namespace 'com.au.resultanalyzer'
-              compileSdk 34
-              defaultConfig {
-                  applicationId "com.au.resultanalyzer"
-                  minSdk 24
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
-              }
-          }
-          dependencies {
-              implementation 'com.google.android.material:material:1.9.0'
-          }
-          EOF
-
-          # 3. Establish clean modules maps
-          echo "include ':app'" > settings.gradle
-
-      - name: Setup Global Gradle Compiler
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.2'
-
-      - name: Execute Android Compilation
-        run: |
-          cd android
-          gradle assembleDebug --stacktrace
+          project-root: 'android'
+          build-command: 'gradle assembleDebug'
 
       - name: Upload Functional Debug APK
         uses: actions/upload-artifact@v4
