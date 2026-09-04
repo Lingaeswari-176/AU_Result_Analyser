@@ -1,16 +1,35 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    // FIX: This namespace declaration is required for Gradle 8+ builds
+    namespace 'com.au.resultanalyzer'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.au.resultanalyzer"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+dependencies {
+    // Keeps dependencies entirely clean and native to match your MainActivity
+    implementation 'com.google.android.material:material:1.9.0'
 }
