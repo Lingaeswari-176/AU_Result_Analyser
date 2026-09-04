@@ -23,23 +23,18 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build release APK
+      - name: Build Debug APK
         run: |
           cd android
-          # Automatically generates the missing gradlew wrapper script
+          # Generates the missing gradle files automatically
           gradle wrapper --gradle-version 8.4
-          # Grants permission and runs the build compilation
           chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
+          # Compiles a Debug build so it packs your code and installs on your phone
+          ./gradlew assembleDebug --stacktrace
 
-      - name: List build outputs (debug)
-        run: |
-          find android/app/build/outputs -type f -exec ls -la {} \;
-
-      - name: Upload APK artifact
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AU-Result-Analyser-APK
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+          name: AU-Result-Analyser-Debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-          
