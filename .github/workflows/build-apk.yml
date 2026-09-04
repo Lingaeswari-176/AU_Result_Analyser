@@ -18,29 +18,72 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Pre-Configure Android Environment
+      # FIXES THE ERROR ON THE SERVER INSTANTLY:
+      - name: Overwrite and Fix Gradle Scripts
         run: |
           cd android
-          # Force generates clean base files so nothing reports "not found"
-          mkdir -p app/src/main
-          if [ ! -f "build.gradle" ]; then
-            echo "plugins { id 'com.android.application' }" > build.gradle
+          
+          # 1. Rewriting root build.gradle with correct plugins syntax
+          cat << 'EOF' > build.gradle
+          buildscript {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+              dependencies {
+                  classpath 'com.android.tools.build:gradle:8.2.0'
+              }
+          }
+          allprojects {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          EOF
+
+          # 2. Rewriting app/build.gradle with correct application container setup
+          mkdir -p app
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              id 'com.android.application'
+          }
+          android {
+              namespace 'com.au.resultanalyzer'
+              compileSdk 34
+              defaultConfig {
+                  applicationId "com.au.resultanalyzer"
+                  minSdk 24
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                  }
+              }
+          }
+          EOF
+
+          # 3. Create basic settings.gradle if missing
+          if [ ! -f "settings.gradle" ]; then
+            echo "include ':app'" > settings.gradle
           fi
-          gradle wrapper --gradle-version 8.2 --distribution-type bin
-          chmod +x gradlew || true
 
       - name: Setup Gradle Compiler
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.2'
 
       - name: Execute Application Build
         run: |
           cd android
-          # Uses the freshly forced runner to build the app package safely
-          ./gradlew assembleDebug --stacktrace || gradle assembleDebug --stacktrace
+          gradle clean assembleDebug --stacktrace
 
       - name: Upload Functional Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: AU-Result-Analyser-Debug-APK
-          path: android/**/*.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
