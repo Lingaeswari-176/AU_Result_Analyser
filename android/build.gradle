@@ -1,22 +1,16 @@
-plugins {
-    id 'com.android.application'
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.0'
+    }
 }
 
-android {
-    namespace 'com.au.resultanalyzer'
-    compileSdk 34
-
-    defaultConfig {
-        applicationId "com.au.resultanalyzer"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
