@@ -26,9 +26,11 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android
-          gradle wrapper --gradle-version 8.4
+          # CHANGED: Lowered version to 8.2 to match your buildscript dependency exactly
+          gradle wrapper --gradle-version 8.2
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          # Added clean to wipe old dependency errors completely
+          ./gradlew clean assembleDebug --stacktrace
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
