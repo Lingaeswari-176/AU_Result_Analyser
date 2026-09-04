@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         settings.setUseWideViewPort(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
         
-        // Essential flags to unblock Streamlit's file uploading iframes
+        // Essential flags to unblock Streamlit's file uploading system
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
         settings.setAllowFileAccessFromFileURLs(true);
@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
         progressBar.setLayoutParams(progressParams);
         progressBar.setMax(100);
 
-        // Keeps your Streamlit application locked inside the WebView frame
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -63,7 +62,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Intercepts the upload click event from the website interface
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -99,7 +97,6 @@ public class MainActivity extends Activity {
         setContentView(root);
     }
 
-    // Receives the selected PDF file from your phone and transmits it to your Streamlit backend
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
