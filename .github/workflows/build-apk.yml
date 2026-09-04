@@ -18,13 +18,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # FIXES THE ERROR ON THE SERVER INSTANTLY:
-      - name: Overwrite and Fix Gradle Scripts
+      # THIS WIPS AND REWRITES THE ENTIRE ENVIRONMENT PERFECTLY ON THE SERVER
+      - name: Force Clean Build Setup
         run: |
-          cd android
+          rm -rf android/build.gradle android/app/build.gradle android/settings.gradle
+          mkdir -p android/app/src/main
           
-          # 1. Rewriting root build.gradle with correct plugins syntax
-          cat << 'EOF' > build.gradle
+          # 1. Create a pristine root build.gradle
+          cat << 'EOF' > android/build.gradle
           buildscript {
               repositories {
                   google()
@@ -42,15 +43,14 @@ jobs:
           }
           EOF
 
-          # 2. Rewriting app/build.gradle with correct application container setup
-          mkdir -p app
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application'
-          }
+          # 2. Create a pristine app module build.gradle
+          cat << 'EOF' > android/app/build.gradle
+          apply plugin: 'com.android.application'
+          
           android {
               namespace 'com.au.resultanalyzer'
               compileSdk 34
+              
               defaultConfig {
                   applicationId "com.au.resultanalyzer"
                   minSdk 24
@@ -64,22 +64,23 @@ jobs:
                   }
               }
           }
+          dependencies {
+              implementation 'com.google.android.material:material:1.9.0'
+          }
           EOF
 
-          # 3. Create basic settings.gradle if missing
-          if [ ! -f "settings.gradle" ]; then
-            echo "include ':app'" > settings.gradle
-          fi
+          # 3. Create a pristine settings.gradle
+          echo "include ':app'" > android/settings.gradle
 
       - name: Setup Gradle Compiler
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.2'
 
-      - name: Execute Application Build
+      - name: Execute Automated Android Compilation
         run: |
           cd android
-          gradle clean assembleDebug --stacktrace
+          gradle assembleDebug --stacktrace
 
       - name: Upload Functional Debug APK
         uses: actions/upload-artifact@v4
